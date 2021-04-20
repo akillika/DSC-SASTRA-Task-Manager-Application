@@ -1,4 +1,4 @@
-import 'package:dsc_todo/add.dart';
+import 'package:dsc_todo/tasks.dart';
 import 'package:dsc_todo/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                 primarySwatch: Colors.blue,
                 fontFamily: 'GoogleSans',
               ),
-              home:SignInPage(),
+              home: SignInPage(),
             );
           }
           return MaterialApp(
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => AddItem()));
+                      .push(MaterialPageRoute(builder: (context) => Tasks()));
                 },
                 child: Text(
                   'Akil App',

@@ -1,5 +1,5 @@
 import 'dart:html';
-import 'package:dsc_todo/add.dart';
+import 'package:dsc_todo/tasks.dart';
 import 'package:dsc_todo/main.dart';
 import 'package:dsc_todo/success.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,8 +72,10 @@ class _SignInPageState extends State<SignInPage> {
                       .signInWithEmailAndPassword(
                           email: userName.text, password: password.text)
                       .then((value) {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AddItem()));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => Tasks(
+                              cluster: "Android",
+                            )));
                     Fluttertoast.showToast(
                         msg: 'Signed in as ${userName.text}');
                   });
@@ -88,17 +90,6 @@ class _SignInPageState extends State<SignInPage> {
                 }
               },
               child: Text('Login')),
-          ElevatedButton(
-              onPressed: () async {
-                try {
-                  await FirebaseAuth.instance.signOut().then((value) {
-                    Fluttertoast.showToast(msg: 'Signed out Successfully');
-                  });
-                } catch (e) {
-                  Fluttertoast.showToast(msg: e);
-                }
-              },
-              child: Text('Sign Out'))
         ],
       ),
     );
