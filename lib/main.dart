@@ -1,3 +1,5 @@
+import 'package:dsc_todo/add.dart';
+import 'package:dsc_todo/signin.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -42,7 +44,13 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('DSC Work list',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+              child: Text(
+                'DSC Work list',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 20),
+              ),
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -117,9 +125,24 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AddItem()));
+                },
+                child: Text(
+                  'Akil App',
+                  style: TextStyle(color: Colors.white),
+                )),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignInPage()));
+                },
+                child: Text(
+                  'Maddy App',
+                  style: TextStyle(color: Colors.white),
+                ))
           ],
         ),
       ),
