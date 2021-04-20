@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                 primarySwatch: Colors.blue,
                 fontFamily: 'GoogleSans',
               ),
-              home: MyHomePage(title: 'DSC SASTRA University'),
+              home:SignInPage(),
             );
           }
           return MaterialApp(

@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'package:dsc_todo/add.dart';
 import 'package:dsc_todo/main.dart';
 import 'package:dsc_todo/success.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +73,7 @@ class _SignInPageState extends State<SignInPage> {
                           email: userName.text, password: password.text)
                       .then((value) {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SuccessPage()));
+                        MaterialPageRoute(builder: (context) => AddItem()));
                     Fluttertoast.showToast(
                         msg: 'Signed in as ${userName.text}');
                   });
