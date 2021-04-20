@@ -38,6 +38,16 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  fonts:
+    - family: GoogleSans
+      fonts:
+        - asset: fonts/GoogleSansDisplay-Regular-v1.27.ttf
+
+#        - asset: fonts/GoogleSansDisplay-Medium-v1.27.ttf
+#          style: medium
+#        - asset: fonts/GoogleSansDisplay-Bold-v1.27.ttf
+#          style: bold
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
