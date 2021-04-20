@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'DSC SASTRA University',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
