@@ -10,12 +10,13 @@ class _AddItemState extends State<AddItem> {
   DateTime selectedDate = DateTime.now();
   int value = 2;
 
-  Future<void> _selectDate(BuildContext context) async {
+  _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
