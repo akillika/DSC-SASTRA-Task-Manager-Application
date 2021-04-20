@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialisation = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return FutureBuilder(
         future: _initialisation,
         builder: (context, snapshot) {
@@ -41,6 +42,17 @@ class MyApp extends StatelessWidget {
             ),
           );
         });
+=======
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'DSC SASTRA University',
+      theme: ThemeData(
+        fontFamily: 'GoogleSans',
+        primarySwatch: Colors.blueGrey,
+      ),
+      home: MyHomePage(title: 'DSC SASTRA University'),
+    );
+>>>>>>> dbfcadd3e8d71fb47c27eba6ad03a2ae09a5ce2d
   }
 }
 
