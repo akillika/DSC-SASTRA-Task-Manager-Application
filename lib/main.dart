@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'DSC SASTRA University',
       theme: ThemeData(
+        fontFamily: 'GoogleSans',
         primarySwatch: Colors.blueGrey,
       ),
       home: MyHomePage(title: 'DSC SASTRA University'),
