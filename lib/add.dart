@@ -6,6 +6,13 @@ class AddItem extends StatefulWidget {
 }
 
 class _AddItemState extends State<AddItem> {
+  int value = 2;
+
+  _addItem() {
+    setState(() {
+      value = value + 1;
+    });
+  }
   bool check=false;
   @override
   Widget build(BuildContext context) {
@@ -20,514 +27,51 @@ class _AddItemState extends State<AddItem> {
             flex: 5,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
-              child: ListView(
-                  children: <Widget>[
-                    Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
+              child: ListView.builder(
+                itemCount: value,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.white,
+                    child: InkWell(
+                      splashColor: Colors.blue,
+                      onTap: () {
+                        print('Card tapped.');
+                      },
+                      child:  SizedBox(
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.check,size: 15,color: Colors.green,),
+                                  SizedBox(width: 5,),
+                                  Text('Mark as done',style: TextStyle(fontSize: 12,color: Colors.green),)
+                                ],
+
+                              ),
+                              SizedBox(width: 15,),
+                              Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
+                              SizedBox(width: 15,),
+                              Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
+                              SizedBox(width: 15,),
+                              Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),Card(
-                      color: Colors.white,
-                      child: InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          print('Card tapped.');
-                        },
-                        child:  SizedBox(
-                          height: 50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Checkbox(
-                                  value: this.check,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.check = value;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 15,),
-                                Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                                SizedBox(width: 15,),
-                                Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                                SizedBox(width: 15,),
-                                Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-                  ]
+                  );
+                },
               )
 
 
             ))
       ]),
       floatingActionButton: FloatingActionButton(
+        onPressed: _addItem,
         backgroundColor: const Color(0xffF4B400),
         child: Icon(Icons.add),
       ),
@@ -553,9 +97,9 @@ class SideLayout extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 70),
-              Image.asset('assets/images/logo.png'),
               ListTile(
                 title: Text(
                   'Android',
