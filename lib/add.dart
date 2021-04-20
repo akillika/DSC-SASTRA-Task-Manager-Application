@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class AddItem extends StatefulWidget {
   @override
@@ -6,14 +7,79 @@ class AddItem extends StatefulWidget {
 }
 
 class _AddItemState extends State<AddItem> {
+  DateTime selectedDate = DateTime.now();
   int value = 2;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      // barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add task'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter task name'),
+                ),
+                SizedBox(height: 25,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${selectedDate.toLocal()}".split(' ')[0]),
+                    GestureDetector(
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        child: Icon(Icons.calendar_today_rounded)),
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Add'),
+              onPressed: () {
+                _addItem();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   _addItem() {
     setState(() {
       value = value + 1;
     });
   }
-  bool check=false;
+
+  _delItem() {
+    setState(() {
+      value = value - 1;
+    });
+  }
+
+  bool check = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,52 +92,80 @@ class _AddItemState extends State<AddItem> {
         Expanded(
             flex: 5,
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ListView.builder(
-                itemCount: value,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.white,
-                    child: InkWell(
-                      splashColor: Colors.blue,
-                      onTap: () {
-                        print('Card tapped.');
-                      },
-                      child:  SizedBox(
-                        height: 50,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.check,size: 15,color: Colors.green,),
-                                  SizedBox(width: 5,),
-                                  Text('Mark as done',style: TextStyle(fontSize: 12,color: Colors.green),)
-                                ],
-
-                              ),
-                              SizedBox(width: 15,),
-                              Text('DSC Articles submission',style: TextStyle(fontSize: 16),),
-                              SizedBox(width: 15,),
-                              Text('Posted on: 15th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                              SizedBox(width: 15,),
-                              Text('Due on: 17th April 2020',style: TextStyle(fontSize: 10,color: Colors.blueGrey),),
-                            ],
+                padding: const EdgeInsets.all(15.0),
+                child: ListView.builder(
+                  itemCount: value,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: Colors.white,
+                      child: InkWell(
+                        splashColor: Colors.blue,
+                        onTap: () {
+                          print('Card tapped.');
+                        },
+                        child: SizedBox(
+                          height: 50,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _delItem();
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check,
+                                        size: 15,
+                                        color: Colors.green,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        'Mark as done',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.green),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'DSC Articles submission',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'Posted on: 15th April 2020',
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.blueGrey),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'Due on: 17th April 2020',
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.blueGrey),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              )
-
-
-            ))
+                    );
+                  },
+                )))
       ]),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
+        onPressed: _showMyDialog,
         backgroundColor: const Color(0xffF4B400),
         child: Icon(Icons.add),
       ),

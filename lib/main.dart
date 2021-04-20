@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
               title: 'DSC SASTRA University',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.blueGrey,
+                primarySwatch: Colors.blue,
                 fontFamily: 'GoogleSans',
               ),
               home: MyHomePage(title: 'DSC SASTRA University'),
