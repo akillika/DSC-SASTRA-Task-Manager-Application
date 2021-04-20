@@ -38,7 +38,9 @@ class _AddItemState extends State<AddItem> {
                       border: UnderlineInputBorder(),
                       labelText: 'Enter task name'),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -50,7 +52,6 @@ class _AddItemState extends State<AddItem> {
                         child: Icon(Icons.calendar_today_rounded)),
                   ],
                 ),
-
               ],
             ),
           ),
