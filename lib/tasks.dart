@@ -57,8 +57,11 @@ class _TasksState extends State<Tasks> {
         ],
       ),
       body: Row(children: <Widget>[
-        SideLayout(
-          cluster: widget.cluster,
+        // SideLayout(
+        //   cluster: widget.cluster,
+        // ),
+        Drawer(
+          elevation: 10,
         ),
         Expanded(
             flex: 5,
