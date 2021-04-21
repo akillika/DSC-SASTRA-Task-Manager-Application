@@ -14,6 +14,35 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+
+   _showMyDialog()  async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sign In help'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('If you are new to this platform, enter the credentials you want and click register. After successful registration you can login with the same credentials from next time. '),
+                Text('Register option is only for first time users!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Got it'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final TextEditingController userName = new TextEditingController();
   final TextEditingController password = new TextEditingController();
   var cluster;
@@ -29,6 +58,17 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          GestureDetector(
+            onTap: (){
+              _showMyDialog();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Icon(Icons.help_outline_outlined),
+            ),
+          ),
+        ],
         title: Text('DSC SASTRA University'),
       ),
       body: Padding(
@@ -80,8 +120,38 @@ class _SignInPageState extends State<SignInPage> {
             height: 35,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // background
+                    onPrimary: Colors.white, // foreground
+                  ),
+                  onPressed: () async {
+                    try {
+                      await FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                          email: userName.text, password: password.text)
+                          .then((value) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => Tasks(
+                              cluster: "DSC Common works",
+                            )));
+                        Fluttertoast.showToast(
+                            msg: 'Signed in as ${userName.text}');
+                      });
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'user-not-found') {
+                        Fluttertoast.showToast(
+                            msg: 'No user found for that email.');
+                      } else if (e.code == 'wrong-password') {
+                        Fluttertoast.showToast(
+                            msg: 'Wrong password provided for that user.');
+                      }
+                    }
+                  },
+                  child: Text('Login')),
+              SizedBox(width: 40,),
               ElevatedButton(
                   onPressed: () async {
                     try {
@@ -109,52 +179,11 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   },
                   child: Text('Register')),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // background
-                    onPrimary: Colors.white, // foreground
-                  ),
-                  onPressed: () async {
-                    try {
-                      await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: userName.text, password: password.text)
-                          .then((value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => Tasks(
-                                  cluster: "Android",
-                                )));
-                        Fluttertoast.showToast(
-                            msg: 'Signed in as ${userName.text}');
-                      });
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'user-not-found') {
-                        Fluttertoast.showToast(
-                            msg: 'No user found for that email.');
-                      } else if (e.code == 'wrong-password') {
-                        Fluttertoast.showToast(
-                            msg: 'Wrong password provided for that user.');
-                      }
-                    }
-                  },
-                  child: Text('Login')),
-              // ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //       primary: Colors.red, // background
-              //       onPrimary: Colors.white, // foreground
-              //     ),
-              //     onPressed: () async {
-              //       try {
-              //         await FirebaseAuth.instance.signOut().then((value) {
-              //           Fluttertoast.showToast(msg: 'Signed out Successfully');
-              //         });
-              //       } catch (e) {
-              //         Fluttertoast.showToast(msg: e);
-              //       }
-              //     },
-              //     child: Text('Sign Out'))
+
             ],
           ),
+          SizedBox(height: 50,),
+          Text('This software is only for DSC CORE TEAM members only!'),
         ]),
       ),
     );
