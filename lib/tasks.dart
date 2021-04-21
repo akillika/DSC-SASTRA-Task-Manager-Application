@@ -123,119 +123,123 @@ class _TasksState extends State<Tasks> {
             flex: 5,
             child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: StreamBuilder(
-                  stream: dataStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: snapshot.data.size,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            color: Colors.white,
-                            child: InkWell(
-                              splashColor: Colors.blue,
-                              onLongPress: () {
-                                var id = snapshot.data.docs[index].id;
-                                FirebaseFirestore.instance
-                                    .collection('tasks')
-                                    .doc(id)
-                                    .delete();
-                              },
-                              onTap: () {
-                                var id = snapshot.data.docs[index].id;
-                                FirebaseFirestore.instance
-                                    .collection('tasks')
-                                    .doc(id)
-                                    .update({
-                                  "isdone": !snapshot.data.docs[index]['isdone']
-                                });
-                              },
-                              child: SizedBox(
-                                height: 50,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      snapshot.data.docs[index]['isdone'] ==
-                                              true
-                                          ? Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.check,
-                                                  size: 15,
-                                                  color: Colors.green,
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  'Marked as done',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.green),
-                                                )
-                                              ],
-                                            )
-                                          : Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.close,
-                                                  size: 15,
-                                                  color: Colors.red,
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  'Pending',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.red),
-                                                )
-                                              ],
-                                            ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        snapshot.data.docs[index]['title'],
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        'Posted on: ' +
-                                            "${snapshot.data.docs[index]['postedOn']}",
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.blueGrey),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        "Due on: " +
-                                            "${snapshot.data.docs[index]['dueOn']}",
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.blueGrey),
-                                      ),
-                                    ],
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: StreamBuilder(
+                    stream: dataStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data.size,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              color: Colors.white,
+                              child: InkWell(
+                                splashColor: Colors.blue,
+                                onLongPress: () {
+                                  var id = snapshot.data.docs[index].id;
+                                  FirebaseFirestore.instance
+                                      .collection('tasks')
+                                      .doc(id)
+                                      .delete();
+                                },
+                                onTap: () {
+                                  var id = snapshot.data.docs[index].id;
+                                  FirebaseFirestore.instance
+                                      .collection('tasks')
+                                      .doc(id)
+                                      .update({
+                                    "isdone": !snapshot.data.docs[index]
+                                        ['isdone']
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        snapshot.data.docs[index]['isdone'] ==
+                                                true
+                                            ? Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.check,
+                                                    size: 15,
+                                                    color: Colors.green,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    'Marked as done',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.green),
+                                                  )
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.close,
+                                                    size: 15,
+                                                    color: Colors.red,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    'Pending',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.red),
+                                                  )
+                                                ],
+                                              ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          snapshot.data.docs[index]['title'],
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          'Posted on: ' +
+                                              "${snapshot.data.docs[index]['postedOn']}",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.blueGrey),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          "Due on: " +
+                                              "${snapshot.data.docs[index]['dueOn']}",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.blueGrey),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 )))
       ]),
       floatingActionButton: FloatingActionButton(
@@ -275,6 +279,27 @@ class _SideLayoutState extends State<SideLayout> {
             children: <Widget>[
               SizedBox(height: 70),
               ListTile(
+                tileColor: widget.cluster == 'DSC Common works'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
+                title: Text(
+                  'DSC Common works',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "DSC Common works",
+                              )),
+                      (route) => false);
+                },
+              ),
+              ListTile(
                 tileColor: widget.cluster == 'Android'
                     ? Color(0xffF4B400)
                     : Colors.transparent,
@@ -312,6 +337,27 @@ class _SideLayoutState extends State<SideLayout> {
                           pageBuilder: (context, animation1, animation2) =>
                               Tasks(
                                 cluster: "AR/VR",
+                              )),
+                      (route) => false);
+                },
+              ),
+              ListTile(
+                tileColor: widget.cluster == 'Content Writing'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
+                title: Text(
+                  'Content Writing',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Content Writing",
                               )),
                       (route) => false);
                 },
@@ -359,6 +405,27 @@ class _SideLayoutState extends State<SideLayout> {
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Event Coverage'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
+                title: Text(
+                  'Event coverage',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Event Coverage",
+                              )),
+                      (route) => false);
+                },
+              ),
+              ListTile(
                 tileColor: widget.cluster == 'Flutter'
                     ? Color(0xffF4B400)
                     : Colors.transparent,
@@ -375,27 +442,6 @@ class _SideLayoutState extends State<SideLayout> {
                           pageBuilder: (context, animation1, animation2) =>
                               Tasks(
                                 cluster: "Flutter",
-                              )),
-                      (route) => false);
-                },
-              ),
-              ListTile(
-                tileColor: widget.cluster == 'Machine Learning'
-                    ? Color(0xffF4B400)
-                    : Colors.transparent,
-                title: Text(
-                  'Machine Learning',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 0),
-                          reverseTransitionDuration: Duration(seconds: 0),
-                          pageBuilder: (context, animation1, animation2) =>
-                              Tasks(
-                                cluster: "Machine Learning",
                               )),
                       (route) => false);
                 },
@@ -422,11 +468,11 @@ class _SideLayoutState extends State<SideLayout> {
                 },
               ),
               ListTile(
-                tileColor: widget.cluster == 'Content Writing'
+                tileColor: widget.cluster == 'Machine Learning'
                     ? Color(0xffF4B400)
                     : Colors.transparent,
                 title: Text(
-                  'Content Writing',
+                  'Machine Learning',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -437,28 +483,7 @@ class _SideLayoutState extends State<SideLayout> {
                           reverseTransitionDuration: Duration(seconds: 0),
                           pageBuilder: (context, animation1, animation2) =>
                               Tasks(
-                                cluster: "Content Writing",
-                              )),
-                      (route) => false);
-                },
-              ),
-              ListTile(
-                tileColor: widget.cluster == 'Event Coverage'
-                    ? Color(0xffF4B400)
-                    : Colors.transparent,
-                title: Text(
-                  'Event coverage',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 0),
-                          reverseTransitionDuration: Duration(seconds: 0),
-                          pageBuilder: (context, animation1, animation2) =>
-                              Tasks(
-                                cluster: "Event Coverage",
+                                cluster: "Machine Learning",
                               )),
                       (route) => false);
                 },
