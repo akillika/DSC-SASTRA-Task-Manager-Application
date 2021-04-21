@@ -1,4 +1,3 @@
-import 'package:dsc_todo/tasks.dart';
 import 'package:dsc_todo/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

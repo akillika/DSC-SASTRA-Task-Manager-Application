@@ -81,6 +81,7 @@ class _SignInPageState extends State<SignInPage> {
           TextField(
             controller: userName,
             showCursor: true,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'E-Mail',
             ),
