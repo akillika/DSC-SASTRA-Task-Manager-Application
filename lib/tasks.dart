@@ -41,7 +41,10 @@ class _TasksState extends State<Tasks> {
   }
 
   getActivities() {
-    return FirebaseFirestore.instance.collection('activity').snapshots();
+    return FirebaseFirestore.instance
+        .collection('activity')
+        .orderBy("time", descending: true)
+        .snapshots();
   }
 
   @override
@@ -50,20 +53,6 @@ class _TasksState extends State<Tasks> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text('DSC SASTRA University'),
-        actions: [
-          Builder(
-            builder: (context) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: IconButton(
-                icon: Icon(Icons.history),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-                tooltip: 'See activity history',
-              ),
-            ),
-          ),
-        ],
       ),
       body: Row(children: <Widget>[
         CustomDrawer(
@@ -100,7 +89,8 @@ class _TasksState extends State<Tasks> {
                                           snapshot.data.docs[index]['title'] +
                                           " in " +
                                           widget.cluster,
-                                      "type": "Delete"
+                                      "type": "Delete",
+                                      "time": DateTime.now()
                                     });
                                     FirebaseFirestore.instance
                                         .collection('tasks')
@@ -130,7 +120,8 @@ class _TasksState extends State<Tasks> {
                                               ['isdone']) +
                                           " in " +
                                           widget.cluster,
-                                      "type": "Modify"
+                                      "type": "Modify",
+                                      "time": DateTime.now()
                                     });
                                   }
                                 },

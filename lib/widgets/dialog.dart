@@ -72,7 +72,8 @@ class _MyDialogState extends State<MyDialog> {
                   title.text +
                   " in " +
                   widget.cluster,
-              "type": "Add"
+              "type": "Add",
+              "time": DateTime.now(),
             });
             Navigator.of(context).pop();
           },
