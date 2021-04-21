@@ -630,3 +630,26 @@ class _SideLayoutState extends State<SideLayout> {
     );
   }
 }
+
+class AppDrawer extends StatefulWidget {
+  @override
+  _AppDrawerState createState() => new _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return new Drawer(
+      child: new ListView(
+        children: <Widget>[
+          new DrawerHeader(
+            child: new Text("Header"),
+          ),
+          new ListTile(
+            title: new Text("Item 1"),
+          ),
+        ],
+      ),
+    );
+  }
+}
