@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsc_todo/tasks.dart';
 import 'package:dsc_todo/main.dart';
 import 'package:dsc_todo/success.dart';
@@ -15,6 +16,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController userName = new TextEditingController();
   final TextEditingController password = new TextEditingController();
+  var cluster;
   FirebaseAuth auth = FirebaseAuth.instance;
   FToast fToast;
   void initState() {
@@ -51,6 +53,29 @@ class _SignInPageState extends State<SignInPage> {
               hintText: 'Password',
             ),
           ),
+          new DropdownButton<String>(
+            hint: Text('Cluster (Only for Registration)'),
+            items: <String>[
+              'Android',
+              'Cyber Security',
+              'Machine Learning',
+              'Flutter',
+              'Google Cloud',
+              'Web',
+              'Design',
+              'Event Coverage',
+              'AR/VR',
+              'Content Writing'
+            ].map((String value) {
+              return new DropdownMenuItem<String>(
+                value: value,
+                child: new Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              cluster = value;
+            },
+          ),
           SizedBox(
             height: 35,
           ),
@@ -64,6 +89,10 @@ class _SignInPageState extends State<SignInPage> {
                           .createUserWithEmailAndPassword(
                               email: userName.text, password: password.text)
                           .then((value) {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(value.user.uid)
+                            .set({"email": userName.text, "cluster": cluster});
                         Fluttertoast.showToast(
                             msg: 'Registered as ${userName.text}');
                       });
@@ -91,8 +120,10 @@ class _SignInPageState extends State<SignInPage> {
                           .signInWithEmailAndPassword(
                               email: userName.text, password: password.text)
                           .then((value) {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Tasks()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => Tasks(
+                                  cluster: "Android",
+                                )));
                         Fluttertoast.showToast(
                             msg: 'Signed in as ${userName.text}');
                       });
@@ -107,21 +138,21 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   },
                   child: Text('Login')),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // background
-                    onPrimary: Colors.white, // foreground
-                  ),
-                  onPressed: () async {
-                    try {
-                      await FirebaseAuth.instance.signOut().then((value) {
-                        Fluttertoast.showToast(msg: 'Signed out Successfully');
-                      });
-                    } catch (e) {
-                      Fluttertoast.showToast(msg: e);
-                    }
-                  },
-                  child: Text('Sign Out'))
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       primary: Colors.red, // background
+              //       onPrimary: Colors.white, // foreground
+              //     ),
+              //     onPressed: () async {
+              //       try {
+              //         await FirebaseAuth.instance.signOut().then((value) {
+              //           Fluttertoast.showToast(msg: 'Signed out Successfully');
+              //         });
+              //       } catch (e) {
+              //         Fluttertoast.showToast(msg: e);
+              //       }
+              //     },
+              //     child: Text('Sign Out'))
             ],
           ),
         ]),

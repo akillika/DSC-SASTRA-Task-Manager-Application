@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Tasks extends StatefulWidget {
@@ -32,6 +33,7 @@ class _TasksState extends State<Tasks> {
   }
 
   Future<void> _showMyDialog() async {
+    final TextEditingController title = new TextEditingController();
     return showDialog<void>(
       context: context,
       // barrierDismissible: false, // user must tap button!
@@ -41,10 +43,9 @@ class _TasksState extends State<Tasks> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Enter task name'),
+                TextField(
+                  controller: title,
+                  decoration: InputDecoration(hintText: 'Enter Task Name'),
                 ),
                 SizedBox(
                   height: 25,
@@ -66,8 +67,14 @@ class _TasksState extends State<Tasks> {
           actions: <Widget>[
             TextButton(
               child: Text('Add'),
-              onPressed: () {
-                _addItem();
+              onPressed: () async {
+                await FirebaseFirestore.instance.collection('tasks').add({
+                  "title": title.text,
+                  "dueOn": "${selectedDate.toLocal()}".split(' ')[0],
+                  "postedOn": "${DateTime.now().toLocal()}".split(' ')[0],
+                  "cluster": widget.cluster,
+                  "isdone": false,
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -84,18 +91,6 @@ class _TasksState extends State<Tasks> {
         .snapshots();
   }
 
-  _addItem() {
-    setState(() {
-      value = value + 1;
-    });
-  }
-
-  _delItem() {
-    setState(() {
-      value = value - 1;
-    });
-  }
-
   bool check = false;
   @override
   Widget build(BuildContext context) {
@@ -109,8 +104,9 @@ class _TasksState extends State<Tasks> {
               onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signOut().then((value) {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SignInPage()));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => SignInPage()),
+                        (route) => false);
                     Fluttertoast.showToast(msg: 'Signed out Successfully');
                   });
                 } catch (e) {
@@ -120,7 +116,9 @@ class _TasksState extends State<Tasks> {
         ],
       ),
       body: Row(children: <Widget>[
-        SideLayout(),
+        SideLayout(
+          cluster: widget.cluster,
+        ),
         Expanded(
             flex: 5,
             child: Padding(
@@ -137,8 +135,21 @@ class _TasksState extends State<Tasks> {
                             color: Colors.white,
                             child: InkWell(
                               splashColor: Colors.blue,
+                              onLongPress: () {
+                                var id = snapshot.data.docs[index].id;
+                                FirebaseFirestore.instance
+                                    .collection('tasks')
+                                    .doc(id)
+                                    .delete();
+                              },
                               onTap: () {
-                                print('Card tapped.');
+                                var id = snapshot.data.docs[index].id;
+                                FirebaseFirestore.instance
+                                    .collection('tasks')
+                                    .doc(id)
+                                    .update({
+                                  "isdone": !snapshot.data.docs[index]['isdone']
+                                });
                               },
                               child: SizedBox(
                                 height: 50,
@@ -148,49 +159,44 @@ class _TasksState extends State<Tasks> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            _delItem();
-                                          },
-                                          child: snapshot.data.docs[index]
-                                                      ['isdone'] ==
-                                                  true
-                                              ? Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.check,
-                                                      size: 15,
-                                                      color: Colors.green,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      'Marked as done',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.green),
-                                                    )
-                                                  ],
+                                      snapshot.data.docs[index]['isdone'] ==
+                                              true
+                                          ? Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.check,
+                                                  size: 15,
+                                                  color: Colors.green,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Marked as done',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.green),
                                                 )
-                                              : Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.close,
-                                                      size: 15,
-                                                      color: Colors.red,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      'Pending',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.red),
-                                                    )
-                                                  ],
-                                                )),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.close,
+                                                  size: 15,
+                                                  color: Colors.red,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Pending',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.red),
+                                                )
+                                              ],
+                                            ),
                                       SizedBox(
                                         width: 15,
                                       ),
@@ -203,9 +209,7 @@ class _TasksState extends State<Tasks> {
                                       ),
                                       Text(
                                         'Posted on: ' +
-                                            snapshot
-                                                .data.docs[index]['postedOn']
-                                                .toString(),
+                                            "${snapshot.data.docs[index]['postedOn']}",
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.blueGrey),
@@ -214,9 +218,8 @@ class _TasksState extends State<Tasks> {
                                         width: 15,
                                       ),
                                       Text(
-                                        'Due on: ' +
-                                            snapshot.data.docs[index]['dueOn']
-                                                .toString(),
+                                        "Due on: " +
+                                            "${snapshot.data.docs[index]['dueOn']}",
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.blueGrey),
@@ -244,9 +247,15 @@ class _TasksState extends State<Tasks> {
   }
 }
 
-class SideLayout extends StatelessWidget {
-  const SideLayout({Key key}) : super(key: key);
+class SideLayout extends StatefulWidget {
+  final String cluster;
+  const SideLayout({Key key, this.cluster}) : super(key: key);
 
+  @override
+  _SideLayoutState createState() => _SideLayoutState();
+}
+
+class _SideLayoutState extends State<SideLayout> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -266,133 +275,220 @@ class SideLayout extends StatelessWidget {
             children: <Widget>[
               SizedBox(height: 70),
               ListTile(
+                tileColor: widget.cluster == 'Android'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Android',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Android",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Android",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'AR/VR'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'AR/VR',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "AR/VR",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "AR/VR",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Cyber Security'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Cyber Security',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Cyber Security",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Cyber Security",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Design'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Design',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Design",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Design",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Flutter'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Flutter',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Flutter",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Flutter",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Machine Learning'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Machine Learning',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Machine Learning",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Machine Learning",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Google Cloud'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Google Cloud',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Google Cloud",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Google Cloud",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Content Writing'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Content Writing',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Content Writing",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Content Writing",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Event Coverage'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Event coverage',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Event Coverage",
-                          )));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Event Coverage",
+                              )),
+                      (route) => false);
                 },
               ),
               ListTile(
+                tileColor: widget.cluster == 'Web'
+                    ? Color(0xffF4B400)
+                    : Colors.transparent,
                 title: Text(
                   'Web',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                            cluster: "Web",
-                          )));
+                  // Navigator.of(context).pushAndRemoveUntil(
+
+                  //     MaterialPageRoute(
+                  //         builder: (context) => Tasks(
+                  //               cluster: "Web",
+                  //             )),
+                  //     (route) => false);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      PageRouteBuilder(
+                          transitionDuration: Duration(seconds: 0),
+                          reverseTransitionDuration: Duration(seconds: 0),
+                          pageBuilder: (context, animation1, animation2) =>
+                              Tasks(
+                                cluster: "Web",
+                              )),
+                      (route) => false);
                 },
               ),
             ],
