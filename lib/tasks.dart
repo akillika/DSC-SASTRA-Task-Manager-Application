@@ -27,8 +27,13 @@ class _TasksState extends State<Tasks> {
     return FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
   }
 
+  taskStatus(bool s) {
+    return s ? "Done" : "Pending";
+  }
+
   var id;
   bool access = false;
+  String name;
   bool check = false;
   @override
   Widget build(BuildContext context) {
@@ -81,6 +86,16 @@ class _TasksState extends State<Tasks> {
                                     ? () {
                                         id = snapshot.data.docs[index].id;
                                         FirebaseFirestore.instance
+                                            .collection('activity')
+                                            .add({
+                                          "action": name +
+                                              " deleted a Task - " +
+                                              snapshot.data.docs[index]
+                                                  ['title'] +
+                                              " in " +
+                                              widget.cluster
+                                        });
+                                        FirebaseFirestore.instance
                                             .collection('tasks')
                                             .doc(id)
                                             .delete();
@@ -89,31 +104,67 @@ class _TasksState extends State<Tasks> {
                                         ? () {
                                             id = snapshot.data.docs[index].id;
                                             FirebaseFirestore.instance
+                                                .collection('activity')
+                                                .add({
+                                              "action": name +
+                                                  " deleted a Task - " +
+                                                  snapshot.data.docs[index]
+                                                      ['title'] +
+                                                  " in " +
+                                                  widget.cluster
+                                            });
+                                            FirebaseFirestore.instance
                                                 .collection('tasks')
                                                 .doc(id)
                                                 .delete();
                                           }
                                         : null,
                                 onTap: widget.cluster == "DSC Common works"
-                                    ? () {
+                                    ? () async {
                                         id = snapshot.data.docs[index].id;
-                                        FirebaseFirestore.instance
+                                        await FirebaseFirestore.instance
                                             .collection('tasks')
                                             .doc(id)
                                             .update({
                                           "isdone": !snapshot.data.docs[index]
                                               ['isdone']
                                         });
+                                        await FirebaseFirestore.instance
+                                            .collection('activity')
+                                            .add({
+                                          "action": name +
+                                              " updated a Task - " +
+                                              snapshot.data.docs[index]
+                                                  ['title'] +
+                                              " - " +
+                                              taskStatus(!snapshot
+                                                  .data.docs[index]['isdone']) +
+                                              " in " +
+                                              widget.cluster
+                                        });
                                       }
                                     : access
-                                        ? () {
+                                        ? () async {
                                             id = snapshot.data.docs[index].id;
-                                            FirebaseFirestore.instance
+                                            await FirebaseFirestore.instance
                                                 .collection('tasks')
                                                 .doc(id)
                                                 .update({
                                               "isdone": !snapshot
                                                   .data.docs[index]['isdone']
+                                            });
+                                            await FirebaseFirestore.instance
+                                                .collection('activity')
+                                                .add({
+                                              "action": name +
+                                                  " updated a Task - " +
+                                                  snapshot.data.docs[index]
+                                                      ['title'] +
+                                                  " - " +
+                                                  taskStatus(!snapshot.data
+                                                      .docs[index]['isdone']) +
+                                                  " in " +
+                                                  widget.cluster
                                             });
                                           }
                                         : null,
@@ -212,6 +263,7 @@ class _TasksState extends State<Tasks> {
             if (snapshot.data['cluster'] == widget.cluster ||
                 widget.cluster == "DSC Common works") {
               access = true;
+              name = snapshot.data['name'];
               return FloatingActionButton(
                 onPressed: () {
                   showDialog(
