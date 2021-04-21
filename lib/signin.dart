@@ -47,6 +47,7 @@ class _SignInPageState extends State<SignInPage> {
 
   final TextEditingController userName = new TextEditingController();
   final TextEditingController password = new TextEditingController();
+  final TextEditingController name = new TextEditingController();
   var cluster;
   FirebaseAuth auth = FirebaseAuth.instance;
   FToast fToast;
@@ -93,6 +94,14 @@ class _SignInPageState extends State<SignInPage> {
             showCursor: true,
             decoration: InputDecoration(
               hintText: 'Password',
+            ),
+          ),
+          TextField(
+            controller: name,
+            obscureText: true,
+            showCursor: true,
+            decoration: InputDecoration(
+              hintText: 'Name (Only for Registration)',
             ),
           ),
           new DropdownButton<String>(
@@ -167,7 +176,11 @@ class _SignInPageState extends State<SignInPage> {
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(value.user.uid)
-                            .set({"email": userName.text, "cluster": cluster});
+                            .set({
+                          "email": userName.text,
+                          "cluster": cluster,
+                          "name": name.text
+                        });
                         Fluttertoast.showToast(
                             msg: 'Registered as ${userName.text}');
                       });
