@@ -16,81 +16,6 @@ class Tasks extends StatefulWidget {
 }
 
 class _TasksState extends State<Tasks> {
-  DateTime selectedDate = DateTime.now();
-  int value = 2;
-
-  _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
-  Future<void> _showMyDialog() async {
-    final TextEditingController title = new TextEditingController();
-    return showDialog<void>(
-      context: context,
-      // barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add task'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: title,
-                  decoration: InputDecoration(hintText: 'Enter Task Name'),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("${selectedDate.toLocal()}".split(' ')[0]),
-                    GestureDetector(
-                        onTap: () {
-                          _selectDate(context);
-                        },
-                        child: Icon(Icons.calendar_today_rounded)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Add'),
-              onPressed: () async {
-                await FirebaseFirestore.instance.collection('tasks').add({
-                  "title": title.text,
-                  "dueOn": "${selectedDate.toLocal()}".split(' ')[0],
-                  "postedOn": "${DateTime.now().toLocal()}".split(' ')[0],
-                  "cluster": widget.cluster,
-                  "isdone": false,
-                });
-                await FirebaseFirestore.instance.collection('activity').add({
-                  "action": name +
-                      " added a New Task - " +
-                      title.text +
-                      " in " +
-                      widget.cluster
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   dataStream() {
     return FirebaseFirestore.instance
         .collection('tasks')
@@ -340,7 +265,15 @@ class _TasksState extends State<Tasks> {
               access = true;
               name = snapshot.data['name'];
               return FloatingActionButton(
-                onPressed: _showMyDialog,
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return MyDialog(
+                          cluster: widget.cluster,
+                        );
+                      });
+                },
                 backgroundColor: const Color(0xffF4B400),
                 child: Icon(Icons.add),
               );
@@ -349,6 +282,78 @@ class _TasksState extends State<Tasks> {
           return Container();
         },
       ),
+    );
+  }
+}
+
+class MyDialog extends StatefulWidget {
+  final String cluster;
+  const MyDialog({Key key, this.cluster}) : super(key: key);
+  @override
+  _MyDialogState createState() => new _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+  DateTime selectedDate = DateTime.now();
+  int value = 2;
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  final TextEditingController title = new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Add task'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            TextField(
+              controller: title,
+              decoration: InputDecoration(hintText: 'Enter Task Name'),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${selectedDate.toLocal()}".split(' ')[0]),
+                GestureDetector(
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    child: Icon(Icons.calendar_today_rounded)),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Add'),
+          onPressed: () async {
+            await FirebaseFirestore.instance.collection('tasks').add({
+              "title": title.text,
+              "dueOn": "${selectedDate.toLocal()}".split(' ')[0],
+              "postedOn": "${DateTime.now().toLocal()}".split(' ')[0],
+              "cluster": widget.cluster,
+              "isdone": false,
+            });
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 }
