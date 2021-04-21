@@ -95,7 +95,6 @@ class _SignInPageState extends State<SignInPage> {
           ),
           TextField(
             controller: name,
-            obscureText: true,
             showCursor: true,
             decoration: InputDecoration(
               hintText: 'Name (Only for Registration)',
