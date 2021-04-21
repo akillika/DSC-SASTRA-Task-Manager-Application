@@ -1,9 +1,7 @@
 import 'package:dsc_todo/signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Tasks extends StatefulWidget {
@@ -271,6 +269,7 @@ class _TasksState extends State<Tasks> {
                       builder: (_) {
                         return MyDialog(
                           cluster: widget.cluster,
+                          name: name,
                         );
                       });
                 },
@@ -288,7 +287,8 @@ class _TasksState extends State<Tasks> {
 
 class MyDialog extends StatefulWidget {
   final String cluster;
-  const MyDialog({Key key, this.cluster}) : super(key: key);
+  final String name;
+  const MyDialog({Key key, this.cluster, this.name}) : super(key: key);
   @override
   _MyDialogState createState() => new _MyDialogState();
 }
@@ -349,6 +349,13 @@ class _MyDialogState extends State<MyDialog> {
               "postedOn": "${DateTime.now().toLocal()}".split(' ')[0],
               "cluster": widget.cluster,
               "isdone": false,
+            });
+            await FirebaseFirestore.instance.collection('activity').add({
+              "action": widget.name +
+                  " added a Task - " +
+                  title.text +
+                  " in " +
+                  widget.cluster
             });
             Navigator.of(context).pop();
           },
