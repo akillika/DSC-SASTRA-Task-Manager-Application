@@ -144,7 +144,8 @@ class _TasksState extends State<Tasks> {
                               color: Colors.white,
                               child: InkWell(
                                 splashColor: Colors.blue,
-                                onLongPress: access
+                                onLongPress: widget.cluster ==
+                                        "DSC Common works"
                                     ? () {
                                         id = snapshot.data.docs[index].id;
                                         FirebaseFirestore.instance
@@ -152,8 +153,16 @@ class _TasksState extends State<Tasks> {
                                             .doc(id)
                                             .delete();
                                       }
-                                    : null,
-                                onTap: access
+                                    : access
+                                        ? () {
+                                            id = snapshot.data.docs[index].id;
+                                            FirebaseFirestore.instance
+                                                .collection('tasks')
+                                                .doc(id)
+                                                .delete();
+                                          }
+                                        : null,
+                                onTap: widget.cluster == "DSC Common works"
                                     ? () {
                                         id = snapshot.data.docs[index].id;
                                         FirebaseFirestore.instance
@@ -164,7 +173,18 @@ class _TasksState extends State<Tasks> {
                                               ['isdone']
                                         });
                                       }
-                                    : null,
+                                    : access
+                                        ? () {
+                                            id = snapshot.data.docs[index].id;
+                                            FirebaseFirestore.instance
+                                                .collection('tasks')
+                                                .doc(id)
+                                                .update({
+                                              "isdone": !snapshot
+                                                  .data.docs[index]['isdone']
+                                            });
+                                          }
+                                        : null,
                                 child: SizedBox(
                                   height: 50,
                                   child: Padding(
@@ -257,7 +277,8 @@ class _TasksState extends State<Tasks> {
         stream: checkAccess(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data['cluster'] == widget.cluster) {
+            if (snapshot.data['cluster'] == widget.cluster ||
+                widget.cluster == "DSC Common works") {
               access = true;
               return FloatingActionButton(
                 onPressed: _showMyDialog,
