@@ -91,6 +91,12 @@ class _TasksState extends State<Tasks> {
         .snapshots();
   }
 
+  checkAccess() {
+    return FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+  }
+
+  var id;
+  bool access = false;
   bool check = false;
   @override
   Widget build(BuildContext context) {
@@ -133,27 +139,32 @@ class _TasksState extends State<Tasks> {
                           itemCount: snapshot.data.size,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
+                            id = snapshot.data.docs[index].id;
                             return Card(
                               color: Colors.white,
                               child: InkWell(
                                 splashColor: Colors.blue,
-                                onLongPress: () {
-                                  var id = snapshot.data.docs[index].id;
-                                  FirebaseFirestore.instance
-                                      .collection('tasks')
-                                      .doc(id)
-                                      .delete();
-                                },
-                                onTap: () {
-                                  var id = snapshot.data.docs[index].id;
-                                  FirebaseFirestore.instance
-                                      .collection('tasks')
-                                      .doc(id)
-                                      .update({
-                                    "isdone": !snapshot.data.docs[index]
-                                        ['isdone']
-                                  });
-                                },
+                                onLongPress: access
+                                    ? () {
+                                        id = snapshot.data.docs[index].id;
+                                        FirebaseFirestore.instance
+                                            .collection('tasks')
+                                            .doc(id)
+                                            .delete();
+                                      }
+                                    : null,
+                                onTap: access
+                                    ? () {
+                                        id = snapshot.data.docs[index].id;
+                                        FirebaseFirestore.instance
+                                            .collection('tasks')
+                                            .doc(id)
+                                            .update({
+                                          "isdone": !snapshot.data.docs[index]
+                                              ['isdone']
+                                        });
+                                      }
+                                    : null,
                                 child: SizedBox(
                                   height: 50,
                                   child: Padding(
@@ -175,7 +186,7 @@ class _TasksState extends State<Tasks> {
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    'Marked as done',
+                                                    'Done',
                                                     style: TextStyle(
                                                         fontSize: 12,
                                                         color: Colors.green),
@@ -242,10 +253,21 @@ class _TasksState extends State<Tasks> {
                   ),
                 )))
       ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showMyDialog,
-        backgroundColor: const Color(0xffF4B400),
-        child: Icon(Icons.add),
+      floatingActionButton: StreamBuilder(
+        stream: checkAccess(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['cluster'] == widget.cluster) {
+              access = true;
+              return FloatingActionButton(
+                onPressed: _showMyDialog,
+                backgroundColor: const Color(0xffF4B400),
+                child: Icon(Icons.add),
+              );
+            }
+          }
+          return Container();
+        },
       ),
     );
   }

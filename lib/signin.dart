@@ -8,14 +8,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
+var uid;
+
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-
-   _showMyDialog()  async {
+  _showMyDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -25,7 +26,8 @@ class _SignInPageState extends State<SignInPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('If you are new to this platform, enter the credentials you want and click register. After successful registration you can login with the same credentials from next time. '),
+                Text(
+                    'If you are new to this platform, enter the credentials you want and click register. After successful registration you can login with the same credentials from next time. '),
                 Text('Register option is only for first time users!'),
               ],
             ),
@@ -60,7 +62,7 @@ class _SignInPageState extends State<SignInPage> {
       appBar: AppBar(
         actions: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               _showMyDialog();
             },
             child: Padding(
@@ -131,12 +133,13 @@ class _SignInPageState extends State<SignInPage> {
                     try {
                       await FirebaseAuth.instance
                           .signInWithEmailAndPassword(
-                          email: userName.text, password: password.text)
+                              email: userName.text, password: password.text)
                           .then((value) {
+                        uid = value.user.uid;
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => Tasks(
-                              cluster: "DSC Common works",
-                            )));
+                                  cluster: "DSC Common works",
+                                )));
                         Fluttertoast.showToast(
                             msg: 'Signed in as ${userName.text}');
                       });
@@ -151,7 +154,9 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   },
                   child: Text('Login')),
-              SizedBox(width: 40,),
+              SizedBox(
+                width: 40,
+              ),
               ElevatedButton(
                   onPressed: () async {
                     try {
@@ -179,10 +184,11 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   },
                   child: Text('Register')),
-
             ],
           ),
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           Text('This software is only for DSC CORE TEAM members only!'),
         ]),
       ),
