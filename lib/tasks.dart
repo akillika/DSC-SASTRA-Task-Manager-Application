@@ -18,6 +18,7 @@ class _TasksState extends State<Tasks> {
     return FirebaseFirestore.instance
         .collection('tasks')
         .where("cluster", isEqualTo: widget.cluster)
+        .orderBy("time", descending: true)
         .snapshots();
   }
 

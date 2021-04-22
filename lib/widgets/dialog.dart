@@ -65,6 +65,7 @@ class _MyDialogState extends State<MyDialog> {
               "postedOn": "${DateTime.now().toLocal()}".split(' ')[0],
               "cluster": widget.cluster,
               "isdone": false,
+              "time": DateTime.now(),
             });
             await FirebaseFirestore.instance.collection('activity').add({
               "action": widget.name +
