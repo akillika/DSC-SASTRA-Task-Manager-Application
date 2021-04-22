@@ -1,6 +1,6 @@
-# dsc_todo
+# DSC SASTRA Universiry
 
-A new Flutter application.
+Core Team Task Manager
 
 ## Getting Started
 
