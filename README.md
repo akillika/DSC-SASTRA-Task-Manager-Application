@@ -1,16 +1,7 @@
-# DSC SASTRA Universiry
+# DSC SASTRA University - Tasks App
 
-Core Team Task Manager
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a Web App to View, Add ,Update and Remove Tasks within DSC SASTRA Core Team Members made using Flutter.<br><br>
+All the Core Team Members can view the tasks of all Clusters.<br><br>
+But only the Cluster Members will be allowed to Add, Modify and Delete Tasks to their Cluster.<br><br>
+There is also a History Space where everyone can see the recent activities across the App.<br><br>
+Web App Link: https://dsc.akildesigns.ml/<br><br>
