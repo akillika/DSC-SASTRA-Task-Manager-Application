@@ -70,6 +70,9 @@ class _TasksState extends State<Tasks> {
             drawer: CustomDrawer(
               cluster: widget.cluster,
             ),
+            floatingActionButton: Fab(
+              cluster: widget.cluster,
+            ),
           );
         }
       },
